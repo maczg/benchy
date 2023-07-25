@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: benchy
+  labels:
+    app: benchy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: benchy
+  template:
+    metadata:
+      labels:
+        app: benchy
+    spec:
+      containers:
+        - name: benchy
+          image: quay.io/massigollo/benchy:0.0.1
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 200m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: benchy
+spec:
+  selector:
+    app: benchy
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
