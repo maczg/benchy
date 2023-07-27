@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: loadgenerator-exporter
+  name: loadgenerator
   labels:
     app: loadgenerator
 spec:
@@ -12,20 +12,9 @@ spec:
     - name: metrics
       port: 9646
       targetPort: 9646
----
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: loadgenerator-monitor
-  labels:
-    release: prometheus
-spec:
-  selector:
-    matchLabels:
-      app: loadgenerator
-  endpoints:
-    - port: metrics
-      interval: 15s  # the scrape interval
+    - name: locust
+      port: 8089
+      targetPort: 8089
 ---
 apiVersion: apps/v1
 kind: Deployment
