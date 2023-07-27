@@ -1,3 +1,32 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: loadgenerator-exporter
+  labels:
+    app: loadgenerator
+spec:
+  selector:
+    app: loadgenerator
+  ports:
+    - name: metrics
+      port: 9646
+      targetPort: 9646
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: loadgenerator-monitor
+  labels:
+    release: prometheus
+spec:
+  selector:
+    matchLabels:
+      app: loadgenerator
+  endpoints:
+    - port: metrics
+      interval: 15s  # the scrape interval
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,6 +44,14 @@ spec:
       restartPolicy: Always
       #TODO add initContainer waiting benchy ready
       containers:
+        - name: locust-exporter
+          image: containersol/locust_exporter
+          imagePullPolicy: Always
+          env:
+            - name: LOCUST_HOST
+              value: "localhost"
+          ports:
+            - containerPort: 9646
         - name: load-generator
           securityContext:
             allowPrivilegeEscalation: false
@@ -24,6 +61,7 @@ spec:
             privileged: false
             readOnlyRootFilesystem: true
           image: quay.io/massigollo/benchy:load
+          imagePullPolicy: Always
           env:
             - name: USERS
               value: "10"
@@ -36,3 +74,5 @@ spec:
             limits:
               cpu: 500m
               memory: 512Mi
+          ports:
+            - containerPort: 8089

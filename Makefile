@@ -23,6 +23,16 @@ clean:
 docker-build: test
 	@docker build -t ${IMG} .
 
+PLATFORMS ?= linux/arm64,linux/amd64
+.PHONY: docker-buildx
+docker-buildx: test ##
+	sed -e '1 s/\(^FROM\)/FROM --platform=\$$\{BUILDPLATFORM\}/; t' -e ' 1,// s//FROM --platform=\$$\{BUILDPLATFORM\}/' Dockerfile > Dockerfile.cross
+	- docker buildx create --name benchy-builder
+	docker buildx use benchy-builder
+	- docker buildx build --push --platform=$(PLATFORMS) --tag ${IMG} -f Dockerfile.cross .
+	- docker buildx rm benchy-builder
+	#rm Dockerfile.cross
+
 .PHONY: docker-push
 docker-push: docker-build
 	@docker push ${IMG}
@@ -30,6 +40,17 @@ docker-push: docker-build
 .PHONY: docker-build-load
 docker-build-load:
 	@docker build -t $(IMAGE_TAG_BASE):load load-gen
+
+
+LOAD_PLATFORMS ?= linux/amd64
+.PHONY: docker-buildx-load
+docker-buildx-load:
+	sed -e '1 s/\(^FROM\)/FROM --platform=\$$\{BUILDPLATFORM\}/; t' -e ' 1,// s//FROM --platform=\$$\{BUILDPLATFORM\}/' load-gen/Dockerfile > load-gen/Dockerfile.cross
+	- docker buildx create --name load-benchy-builder
+	docker buildx use load-benchy-builder
+	- docker buildx build --push --platform=$(LOAD_PLATFORMS) --tag $(IMAGE_TAG_BASE):load -f load-gen/Dockerfile.cross load-gen
+	- docker buildx rm load-benchy-builder
+
 
 .PHONY: docker-push-load
 docker-push-load: docker-build-load
