@@ -5,16 +5,29 @@ import (
 	log "github.com/sirupsen/logrus"
 	"math/rand"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 )
 
+var port string
+
+func init() {
+	log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
+
+	port = os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+}
+
 func main() {
-	log.Infoln("Starting server on port 8080")
+	log.Infof("Starting server on port %s", port)
 	http.HandleFunc("/health", healthCheckHandler)
 	http.HandleFunc("/cpu", cpuIntensiveHandler)
 	http.HandleFunc("/memory", memoryIntensiveHandler)
-	log.Fatalln(http.ListenAndServe(":8080", nil))
+	addr := fmt.Sprintf(":%s", port)
+	log.Fatalln(http.ListenAndServe(addr, nil))
 }
 
 func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
