@@ -1,0 +1,43 @@
+name: benchy-load image CI
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - tools/load-gen/**
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - tools/load-gen/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Log in to quay.io Red Hat Registry
+        uses: redhat-actions/podman-login@v1
+        with:
+          registry: quay.io
+          username: massigollo
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      - name: Build Image
+        id: build-image
+        uses: redhat-actions/buildah-build@v2
+        with:
+          image: benchy
+          tags: "load-${{ github.sha }}"
+          context: tools/load-gen
+          containerfiles: Dockerfile
+
+      - name: Push To quay.io
+        id: push-to-quay
+        uses: redhat-actions/push-to-registry@v2
+        with:
+          image: ${{ steps.build-image.outputs.image }}
+          tags: ${{ steps.build-image.outputs.tags }}
+          registry: quay.io/massigollo
+          username: massigollo
+          password: ${{ secrets.REGISTRY_PASSWORD }}

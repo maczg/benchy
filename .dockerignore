@@ -1,4 +1,9 @@
-*
-!cmd
-!go.mod
-!go.sum
+.git
+.gitignore
+.github
+.idea
+bin
+deploy
+Dockerfile
+Makefile
+

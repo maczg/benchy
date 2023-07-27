@@ -11,7 +11,7 @@ on:
     paths:
       - "**/.go"
       - "Dockerfile"
-      -
+
 jobs:
   build:
     runs-on: ubuntu-latest

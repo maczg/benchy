@@ -1,0 +1,23 @@
+services:
+
+  benchy:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - PORT=8080
+    command:
+      - simple
+
+  kafka:
+    extends:
+      file: docker-compose.kafka.yaml
+      service: kafka
+
+  zookeeper:
+    extends:
+      file: docker-compose.kafka.yaml
+      service: zookeeper
+

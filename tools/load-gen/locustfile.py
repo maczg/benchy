@@ -7,6 +7,6 @@ class User(HttpUser):
     def cpu_load(self):
         self.client.get("/cpu?n=30")
 
-    @task
-    def memory_load(self):
-        self.client.get("/memory?size=10000000")
+    # @task
+    # def memory_load(self):
+    #     self.client.get("/memory?size=10000000")
