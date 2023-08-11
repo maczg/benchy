@@ -1,9 +1,13 @@
 .git
-.gitignore
+tools
 .github
 .idea
 bin
-deploy
+release
+.gitignore
 Dockerfile
 Makefile
+README.md
+
+
 

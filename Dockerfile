@@ -3,15 +3,11 @@ ARG TARGETOS
 ARG TARGETARCH
 
 WORKDIR /workspace
-COPY go.mod go.mod
-COPY go.sum go.sum
 
-RUN go mod download
-
-# Copy the go source
 COPY . .
 
-RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o benchy main.go
+RUN go mod download
+RUN CGO_ENABLED=0 GOOS=${TARGETOS:-linux} GOARCH=${TARGETARCH} go build -a -o benchy
 
 FROM gcr.io/distroless/static:nonroot
 WORKDIR /

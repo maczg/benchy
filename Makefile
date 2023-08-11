@@ -1,43 +1,39 @@
 VERSION ?= 0.0.1
 IMAGE_TAG_BASE ?= quay.io/massigollo/benchy
+PLATFORMS ?= linux/amd64
 IMG ?= $(IMAGE_TAG_BASE):$(VERSION)
 
-.PHONY: build
-build:
-	@go build -o bin/benchy main.go
-
-.PHONY: build
-run: test build
-	@bin/benchy
+COMMAND ?= standalone
 
 .PHONY: test
 test:
 	@go test -v ./...
 
-.PHONY: clean
-clean:
-	@rm -rf bin
+.PHONY: run
+run:
+	@go build -o bin/benchy main.go
+	@./bin/benchy ${COMMAND}
 
-.PHONY: docker-build
-docker-build: test
-	@docker build -t ${IMG} .
+.PHONY: build
+build: test
+	@docker buildx build --platform=${PLATFORMS} --tag ${IMG} .
 
-.PHONY: docker-push
-docker-push: docker-build
+.PHONY: push
+push: build
 	@docker push ${IMG}
 
-.PHONY: docker-build-load
-docker-build-load:
+.PHONY: build-load
+build-load:
 	@docker build -t $(IMAGE_TAG_BASE):load utils/load-gen
 
-.PHONY: docker-push-load
-docker-push-load: docker-build-load
+.PHONY: push-load
+push-load: build-load
 	@docker push $(IMAGE_TAG_BASE):load
 
 deploy:
 	@kubectl cluster-info | head -n -2
 	@echo "Current ns: $$(kubectl config get-contexts | grep -e "^\*" | awk '{print $$5}')"
-	@kubectl apply -f deploy/kubernetes
+	@kubectl apply -f release/kubernetes
 
 destroy:
-	kubectl delete -f deploy/kubernetes
+	kubectl delete -f release/kubernetes
