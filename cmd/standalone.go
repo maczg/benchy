@@ -25,6 +25,4 @@ var standaloneCmd = cobra.Command{
 
 func init() {
 	standaloneCmd.PersistentFlags().IntVarP(&standAlonePort, "port", "p", 8080, "port to listen on")
-	rootCmd.AddCommand(&standaloneCmd)
-
 }

@@ -29,5 +29,7 @@ func Execute() {
 }
 
 func init() {
+	rootCmd.AddCommand(&standaloneCmd)
+	rootCmd.AddCommand(&traceSrvCmd)
 
 }
