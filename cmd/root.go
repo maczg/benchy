@@ -1,12 +1,14 @@
 package cmd
 
 import (
+	"github.com/massimo-gollo/benchy/cmd/simple"
+	"github.com/massimo-gollo/benchy/cmd/srvtrace"
+	"github.com/massimo-gollo/benchy/pkg/version"
 	"github.com/spf13/cobra"
 	"os"
 )
 
 // rootCmd represents the base command when called without any subcommands
-
 var rootCmd = &cobra.Command{
 	Use:   "benchy",
 	Short: "Benchy, CLI benchmark launcher",
@@ -29,7 +31,8 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.AddCommand(&standaloneCmd)
-	rootCmd.AddCommand(&traceSrvCmd)
+	rootCmd.AddCommand(&simple.SimpleCmd)
+	rootCmd.AddCommand(&srvtrace.TraceSrvCmd)
+	rootCmd.AddCommand(version.Command())
 
 }

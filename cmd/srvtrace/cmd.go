@@ -1,4 +1,4 @@
-package cmd
+package srvtrace
 
 import (
 	"context"
@@ -6,6 +6,7 @@ import (
 	"github.com/massimo-gollo/benchy/pkg/log"
 	"github.com/massimo-gollo/benchy/pkg/mixin"
 	"github.com/massimo-gollo/benchy/pkg/trace"
+	"github.com/massimo-gollo/benchy/pkg/version"
 	"github.com/spf13/cobra"
 	"go.opentelemetry.io/otel"
 	tr "go.opentelemetry.io/otel/trace"
@@ -13,7 +14,7 @@ import (
 	"time"
 )
 
-var traceSrvCmd = cobra.Command{
+var TraceSrvCmd = cobra.Command{
 	Use:   "server",
 	Short: "Start simple server with tracing",
 	Long:  "Start simple server instrumented with otel for tracing",
@@ -64,6 +65,10 @@ var traceSrvCmd = cobra.Command{
 		logger.Fatalln(http.ListenAndServe(":8080", r))
 
 	},
+}
+
+func init() {
+	TraceSrvCmd.AddCommand(version.Command())
 }
 
 func doWork(ctx context.Context, tracer tr.Tracer) {
