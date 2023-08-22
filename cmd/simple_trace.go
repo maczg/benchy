@@ -1,46 +1,47 @@
-package srvtrace
+package cmd
 
 import (
 	"context"
 	"github.com/gorilla/mux"
 	"github.com/massimo-gollo/benchy/pkg/log"
 	"github.com/massimo-gollo/benchy/pkg/mixin"
-	"github.com/massimo-gollo/benchy/pkg/trace"
+	"github.com/massimo-gollo/benchy/pkg/tracing"
 	"github.com/massimo-gollo/benchy/pkg/version"
+	"github.com/massimo-gollo/benchy/services/simpletrace"
 	"github.com/spf13/cobra"
 	"go.opentelemetry.io/otel"
-	tr "go.opentelemetry.io/otel/trace"
+	"go.opentelemetry.io/otel/trace"
 	"net/http"
 	"time"
 )
 
-var TraceSrvCmd = cobra.Command{
-	Use:   "server",
+var traceCmd = cobra.Command{
+	Use:   "simpletrace",
 	Short: "Start simple server with tracing",
 	Long:  "Start simple server instrumented with otel for tracing",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		logger := log.NewDefaultLogger()
+		mixin.MustMapEnv(&simpletrace.OtelEndpoint, "OTEL_EXPORTER_OTLP_ENDPOINT")
+
+		// alias for logger
+		logger := simpletrace.Logger
+
 		logger.Infoln("starting server: init tracing")
 
-		var otlpEndpoint = mixin.GetEnvOrDefault("OTLP_ENDPOINT", "localhost:4317")
-
-		ctx := context.Background()
-
-		shutdown, err := trace.InitOLTPTracer("server", otlpEndpoint)
+		shutdown, err := tracing.InitOLTPTracer(simpletrace.ServiceName, simpletrace.OtelEndpoint)
 		if err != nil {
 			logger.WithError(err).Fatalln("failed to initialize tracer")
 		}
 		defer func() {
-			if err := shutdown(ctx); err != nil {
+			if err := shutdown(context.Background()); err != nil {
 				logger.WithError(err).Errorln("failed to shutdown tracer")
 			}
 		}()
 
-		tracer := otel.Tracer("server")
+		tracer := otel.Tracer(simpletrace.ServiceName)
 
 		r := mux.NewRouter()
-		r.Use(trace.Middleware(tracer, log.SetLogName("tracer", logger)))
+		r.Use(tracing.Middleware(tracer, log.SetLogName(simpletrace.ServiceName, logger)))
 
 		r.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
 			_, _ = w.Write([]byte("ok\n"))
@@ -68,10 +69,12 @@ var TraceSrvCmd = cobra.Command{
 }
 
 func init() {
-	TraceSrvCmd.AddCommand(version.Command())
+	traceCmd.AddCommand(version.Command())
+	traceCmd.PersistentFlags().StringVarP(&simpletrace.ServiceName, "name", "n", "simpletrace", "service name")
+	traceCmd.PersistentFlags().StringVarP(&simpletrace.Port, "port", "p", "8080", "simple server port to listen on")
 }
 
-func doWork(ctx context.Context, tracer tr.Tracer) {
+func doWork(ctx context.Context, tracer trace.Tracer) {
 	ctx, span := tracer.Start(
 		ctx,
 		"work-test-handler-1")
