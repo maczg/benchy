@@ -3,7 +3,7 @@ IMAGE_TAG_BASE ?= quay.io/massigollo/benchy
 PLATFORMS ?= linux/amd64
 IMG ?= $(IMAGE_TAG_BASE):$(VERSION)
 
-COMMAND ?= standalone
+COMMAND ?= simple
 
 .PHONY: test
 test:

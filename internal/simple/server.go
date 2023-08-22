@@ -1,4 +1,4 @@
-package standalone
+package simple
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-const ServiceName = "standalone"
+const ServiceName = "simple"
 
 type Server struct {
 	name       string
@@ -34,9 +34,9 @@ func (srv *Server) Logger() *logrus.Logger {
 	return srv.logger
 }
 
-func New(servername, port string) *Server {
+func NewServer(serviceName, port string) *Server {
 	srv := &Server{
-		name:       servername,
+		name:       serviceName,
 		listenAddr: fmt.Sprintf(":%s", port),
 		logger:     log.NewDefaultLogger(),
 		router:     mux.NewRouter(),
