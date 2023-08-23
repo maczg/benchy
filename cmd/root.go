@@ -31,6 +31,7 @@ func Execute() {
 func init() {
 	rootCmd.AddCommand(&simpleCmd)
 	rootCmd.AddCommand(&traceCmd)
+	rootCmd.AddCommand(&kafkaConsumerCmd)
 	rootCmd.AddCommand(version.Command())
 
 }

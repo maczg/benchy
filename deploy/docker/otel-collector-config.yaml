@@ -11,12 +11,19 @@ exporters:
 
   logging:
 
+  kafka/traces:
+    brokers:
+      - kafka:9092
+    protocol_version: 2.0.0
+    encoding: otlp_json
+    topic: 'otlp_spans'
+
 #  zipkin:
 #    endpoint: "http://zipkin-all-in-one:9411/api/v2/spans"
 #    format: proto
 
   jaeger:
-    endpoint: jaeger-all-in-one:14250
+    endpoint: jaeger:14250
     tls:
       insecure: true
 
@@ -36,4 +43,4 @@ service:
     traces:
       receivers: [otlp]
       processors: [batch]
-      exporters: [logging, jaeger]
+      exporters: [logging, jaeger, kafka/traces]

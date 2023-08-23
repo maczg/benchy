@@ -12,7 +12,7 @@ services:
       - 4318:4318 # OTLP http receiver
       - 55679:55679 # zpages extension
 
-  jaeger-all-in-one:
+  jaeger:
     image: jaegertracing/all-in-one:latest
     restart: always
     ports:

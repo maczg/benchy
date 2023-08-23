@@ -62,8 +62,8 @@ var traceCmd = cobra.Command{
 			_, _ = w.Write([]byte("test-handler\n"))
 		})
 
-		logger.Infoln("starting server: listening on :8080")
-		logger.Fatalln(http.ListenAndServe(":8080", r))
+		logger.Infof("starting server: listening on port %s", simpletrace.Port)
+		logger.Fatalln(http.ListenAndServe(":"+simpletrace.Port, r))
 
 	},
 }
