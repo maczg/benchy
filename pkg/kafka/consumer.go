@@ -2,6 +2,7 @@ package kafka
 
 import (
 	"context"
+	"crypto/tls"
 	"github.com/Shopify/sarama"
 	zlog "log"
 	"os"
@@ -20,6 +21,10 @@ func StartConsumerGroup(ctx context.Context, brokers []string) error {
 	saramaConfig.Version = ProtocolVersion
 	// So we can know the partition and offset of messages.
 	saramaConfig.Producer.Return.Successes = true
+	saramaConfig.Net.TLS.Enable = true
+	saramaConfig.Net.TLS.Config = &tls.Config{
+		InsecureSkipVerify: true,
+	}
 
 	consumerGroup, err := sarama.NewConsumerGroup(brokers, GroupID, saramaConfig)
 	if err != nil {
