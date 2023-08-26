@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"github.com/massimo-gollo/benchy/pkg/middleware"
-	"github.com/massimo-gollo/benchy/pkg/version"
 	"github.com/massimo-gollo/benchy/services/simple"
 	"github.com/spf13/cobra"
 	"strconv"
@@ -25,5 +24,5 @@ var simpleCmd = cobra.Command{
 
 func init() {
 	simpleCmd.PersistentFlags().IntVarP(&simplePort, "port", "p", 8080, "simple server port to listen on")
-	simpleCmd.AddCommand(version.Command())
+
 }
