@@ -30,7 +30,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: benchy
-          tags: "${{ github.sha }}"
+          tags: "${{ github.sha }}" "latest"
           context: .
           containerfiles: Dockerfile
 
