@@ -11,6 +11,8 @@ on:
     paths:
       - "**/.go"
       - "Dockerfile"
+  workflow_dispatch:
+
 
 jobs:
   build:
@@ -30,7 +32,7 @@ jobs:
         uses: redhat-actions/buildah-build@v2
         with:
           image: benchy
-          tags: "${{ github.sha }}" "latest"
+          tags: ${{ github.sha }} latest
           context: .
           containerfiles: Dockerfile
 

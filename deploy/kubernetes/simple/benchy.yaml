@@ -16,12 +16,12 @@ spec:
     spec:
       containers:
         - name: benchy
-          image: quay.io/massigollo/benchy:0.0.1
+          image: quay.io/massigollo/benchy:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
           command:
-            - standalone -p 8080
+            - simple -p 8080
           resources:
             limits:
               cpu: 100m
