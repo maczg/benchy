@@ -10,26 +10,35 @@ services:
       - PORT=8080
       - OTLP_ENDPOINT=otel-collector:4317
     command:
-      - kafka-consumer
+      - simple
 
-  kafka:
-    extends:
-      service: kafka
-      file: docker-compose.kafka.yaml
-
-  zookeeper:
-    extends:
-      service: zookeeper
-      file: docker-compose.kafka.yaml
+  loadgen:
+    image: quay.io/massigollo/benchy:load
+    ports:
+        - "8089:8089"
+    environment:
+        - PORT=8080
+        - TARGET_ADDR="http://benchy:8080"
 
 
-  otel-collector:
-    extends:
-      file: docker-compose.otel.yaml
-      service: otel-collector
-
-  jaeger:
-    extends:
-      file: docker-compose.otel.yaml
-      service: jaeger
+#  kafka:
+#    extends:
+#      service: kafka
+#      file: docker-compose.kafka.yaml
+#
+#  zookeeper:
+#    extends:
+#      service: zookeeper
+#      file: docker-compose.kafka.yaml
+#
+#
+#  otel-collector:
+#    extends:
+#      file: docker-compose.otel.yaml
+#      service: otel-collector
+#
+#  jaeger:
+#    extends:
+#      file: docker-compose.otel.yaml
+#      service: jaeger
 
