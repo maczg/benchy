@@ -30,6 +30,10 @@ spec:
       labels:
         app: loadgenerator
     spec:
+      volumes:
+        - name: locust-config
+          configMap:
+            name: locust-config
       restartPolicy: Always
       #TODO add initContainer waiting benchy ready
       containers:
@@ -65,3 +69,22 @@ spec:
               memory: 512Mi
           ports:
             - containerPort: 8089
+
+          volumeMounts:
+            - name: locust-config
+              mountPath: /loadgen
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: locust-config
+data:
+  locustfile.py: |
+    from locust import HttpUser, task, between
+
+    class User(HttpUser):
+      wait_time = between(1, 2.5)
+      
+      @task
+      def cpu_load(self):
+        self.client.get("/cpuintensive?n=30")
