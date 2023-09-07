@@ -2,19 +2,42 @@ package simple
 
 import (
 	"fmt"
-	"github.com/massimo-gollo/benchy/pkg/mixin"
-	"net/http"
+	"github.com/gin-gonic/gin"
+	"github.com/massimo-gollo/benchy/pkg/util"
 	"strconv"
+	"time"
 )
 
-func CpuIntensiveHandler(w http.ResponseWriter, r *http.Request) {
-	n, _ := strconv.Atoi(r.URL.Query().Get("n"))
-	result := mixin.Fibonacci(n)
-	_, _ = fmt.Fprintf(w, "Fibonacci sequence of %d: %d\n", n, result)
+func HealthHandler(c *gin.Context) {
+	c.JSON(200, gin.H{
+		"health": "ok",
+	})
 }
 
-func MemoryIntensiveHandler(w http.ResponseWriter, r *http.Request) {
-	size, _ := strconv.Atoi(r.URL.Query().Get("size"))
-	data := mixin.GenerateData(size)
-	_, _ = fmt.Fprintf(w, "Generated %d random numbers.\n", len(data))
+func CpuTaskHandler(c *gin.Context) {
+	start := time.Now()
+	n, _ := strconv.Atoi(c.Query("n"))
+	result := util.FibonacciOptimized(uint64(n))
+	elapsed := time.Since(start)
+	c.JSON(200, gin.H{
+		"result": fmt.Sprintf("Fibonacci sequence of %d: %d\n. Elapsed: %s", n, result, elapsed),
+	})
+}
+
+func CpuIntensiveTaskHandler(c *gin.Context) {
+	start := time.Now()
+	n, _ := strconv.Atoi(c.Query("n"))
+	result := util.Fibonacci(n)
+	elapsed := time.Since(start)
+	c.JSON(200, gin.H{
+		"result": fmt.Sprintf("Fibonacci sequence of %d: %d\n. Elapsed: %s", n, result, elapsed),
+	})
+}
+
+func MemTaskHandler(c *gin.Context) {
+	size, _ := strconv.Atoi(c.Query("size"))
+	data := util.GenerateData(size)
+	c.JSON(200, gin.H{
+		"result": fmt.Sprintf("Generated %d random numbers.\n", len(data)),
+	})
 }

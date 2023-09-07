@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/gorilla/mux"
 	"github.com/massimo-gollo/benchy/pkg/log"
-	"github.com/massimo-gollo/benchy/pkg/mixin"
 	"github.com/massimo-gollo/benchy/pkg/tracing"
 	"github.com/massimo-gollo/benchy/pkg/util"
 	"github.com/massimo-gollo/benchy/pkg/version"
