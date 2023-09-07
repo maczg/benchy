@@ -1,6 +1,6 @@
 bin
 .idea
 deploy/docker
-!deploy/docker/.yaml
+!deploy/docker/**.yaml
 
 

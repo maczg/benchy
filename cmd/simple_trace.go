@@ -6,6 +6,7 @@ import (
 	"github.com/massimo-gollo/benchy/pkg/log"
 	"github.com/massimo-gollo/benchy/pkg/mixin"
 	"github.com/massimo-gollo/benchy/pkg/tracing"
+	"github.com/massimo-gollo/benchy/pkg/util"
 	"github.com/massimo-gollo/benchy/pkg/version"
 	"github.com/massimo-gollo/benchy/services/simpletrace"
 	"github.com/spf13/cobra"
@@ -21,7 +22,7 @@ var traceCmd = cobra.Command{
 	Long:  "Start simple server instrumented with otel for tracing",
 	Run: func(cmd *cobra.Command, args []string) {
 
-		mixin.MustMapEnv(&simpletrace.OtelEndpoint, "OTEL_EXPORTER_OTLP_ENDPOINT")
+		util.MustMapEnv(&simpletrace.OtelEndpoint, "OTEL_EXPORTER_OTLP_ENDPOINT")
 
 		// alias for logger
 		logger := simpletrace.Logger
@@ -62,8 +63,8 @@ var traceCmd = cobra.Command{
 			_, _ = w.Write([]byte("test-handler\n"))
 		})
 
-		logger.Infof("starting server: listening on port %s", simpletrace.Port)
-		logger.Fatalln(http.ListenAndServe(":"+simpletrace.Port, r))
+		logger.Infof("starting server: listening on port %s", serverPort)
+		logger.Fatalln(http.ListenAndServe(":"+serverPort, r))
 
 	},
 }
@@ -71,7 +72,7 @@ var traceCmd = cobra.Command{
 func init() {
 	traceCmd.AddCommand(version.Command())
 	traceCmd.PersistentFlags().StringVarP(&simpletrace.ServiceName, "name", "n", "simpletrace", "service name")
-	traceCmd.PersistentFlags().StringVarP(&simpletrace.Port, "port", "p", "8080", "simple server port to listen on")
+	traceCmd.PersistentFlags().StringVarP(&serverPort, "port", "p", "8080", "simple server port to listen on")
 }
 
 func doWork(ctx context.Context, tracer trace.Tracer) {

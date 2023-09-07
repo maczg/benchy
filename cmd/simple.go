@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/massimo-gollo/benchy/pkg/middleware"
+	"github.com/massimo-gollo/benchy/pkg/version"
 	"github.com/massimo-gollo/benchy/services/simple"
 	"github.com/spf13/cobra"
 )
@@ -13,7 +14,7 @@ var simpleCmd = cobra.Command{
 	Short: "Start a simple http server",
 	Long:  `Start a simple http server. Expose two endpoints: /cpu and /memory to test CPU and memory intensive tasks.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		s := simple.NewServer(simple.ServiceName, simplePort)
+		s := simple.NewServer(simple.ServiceName, serverPort)
 		s.AddHandler("/cpu", simple.CpuIntensiveHandler)
 		s.AddHandler("/memory", simple.MemoryIntensiveHandler)
 		s.AddMiddleware(middleware.LoggerMw(s.Logger()))
@@ -22,6 +23,7 @@ var simpleCmd = cobra.Command{
 }
 
 func init() {
-	simpleCmd.PersistentFlags().StringVarP(&simplePort, "port", "p", "8080", "simple server port to listen on")
+	simpleCmd.AddCommand(version.Command())
+	simpleCmd.PersistentFlags().StringVarP(&serverPort, "port", "p", "8080", "simple server port to listen on")
 
 }

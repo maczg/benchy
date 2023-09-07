@@ -1,4 +1,4 @@
-package mixin
+package util
 
 import (
 	"math/rand"

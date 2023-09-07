@@ -1,4 +1,4 @@
-package mixin
+package util
 
 import (
 	"fmt"
@@ -28,4 +28,13 @@ func MustMapEnv(target *string, key string) {
 		logrus.Fatalf("Missing environment variable %s", key)
 	}
 	*target = value
+}
+
+func GetEnvOrWarning(key string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		logrus.Warnf("Missing environment variable %s", key)
+		return ""
+	}
+	return value
 }

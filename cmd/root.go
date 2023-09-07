@@ -1,9 +1,20 @@
 package cmd
 
 import (
+	"github.com/massimo-gollo/benchy/pkg/util"
 	"github.com/massimo-gollo/benchy/pkg/version"
 	"github.com/spf13/cobra"
 	"os"
+)
+
+var (
+	serverPort string
+	redisAddr  string
+	otelAddr   string
+
+	kafkaAddr  string
+	kafkaTopic string
+	kafkaGroup string
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -34,4 +45,15 @@ func init() {
 	rootCmd.AddCommand(&kafkaConsumerCmd)
 	rootCmd.AddCommand(version.Command())
 
+	initVariables()
+
+}
+
+func initVariables() {
+	serverPort = util.GetEnvOrDefault("SERVER_PORT", "8080")
+	redisAddr = util.GetEnvOrWarning("REDIS_ADDR")
+	otelAddr = util.GetEnvOrWarning("OTEL_ADDR")
+	kafkaAddr = util.GetEnvOrWarning("KAFKA_ADDR")
+	kafkaTopic = util.GetEnvOrWarning("KAFKA_TOPIC")
+	kafkaGroup = util.GetEnvOrWarning("KAFKA_GROUP")
 }
