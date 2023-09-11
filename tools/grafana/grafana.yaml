@@ -1,0 +1,163 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  name: grafana
+  namespace: benchy
+  labels:
+    dashboards: "grafana"
+spec:
+  config:
+    log:
+      mode: "console"
+    auth:
+      disable_login_form: false
+    security:
+      admin_user: admin
+      admin_password: admin
+---
+kind: Datasource
+
+---
+kind: GrafanaDashboard
+apiVersion: grafana.integreatly.org/v1beta1
+metadata:
+  namespace: benchy
+  name: grafana-dashboard-api-performance
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  configMapRef:
+    name: grafana-dashboard-api-performance
+    key: "api-performance.json"
+---
+kind: GrafanaDashboard
+apiVersion: grafana.integreatly.org/v1beta1
+metadata:
+  namespace: benchy
+  name: grafana-dashboard-cluster-total
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  configMapRef:
+    name: grafana-dashboard-cluster-total
+    key: cluster-total.json
+---
+kind: GrafanaDashboard
+apiVersion: grafana.integreatly.org/v1beta1
+metadata:
+  namespace: benchy
+  name: grafana-dashboard-k8s-resources-cluster
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  configMapRef:
+    name: grafana-dashboard-k8s-resources-cluster
+    key: k8s-resources-cluster.json
+---
+kind: GrafanaDashboard
+apiVersion: grafana.integreatly.org/v1beta1
+metadata:
+  namespace: benchy
+  name: grafana-dashboard-k8s-resources-namespace
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  configMapRef:
+    name: grafana-dashboard-k8s-resources-namespace
+    key: k8s-resources-namespace.json
+---
+kind: GrafanaDashboard
+apiVersion: grafana.integreatly.org/v1beta1
+metadata:
+  namespace: benchy
+  name:  grafana-dashboard-k8s-resources-node
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  configMapRef:
+    name:  grafana-dashboard-k8s-resources-node
+    key: k8s-resources-node.json
+---
+kind: GrafanaDashboard
+apiVersion: grafana.integreatly.org/v1beta1
+metadata:
+  namespace: benchy
+  name: grafana-dashboard-k8s-resources-pod
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  configMapRef:
+    name: grafana-dashboard-k8s-resources-pod
+    key: k8s-resources-pod.json
+---
+kind: GrafanaDashboard
+apiVersion: grafana.integreatly.org/v1beta1
+metadata:
+  namespace: benchy
+  name: grafana-dashboard-k8s-resources-workload
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  configMapRef:
+    name: grafana-dashboard-k8s-resources-workload
+    key: k8s-resources-workload.json
+---
+kind: GrafanaDashboard
+apiVersion: grafana.integreatly.org/v1beta1
+metadata:
+  namespace: benchy
+  name: grafana-dashboard-node-cluster-rsrc-use
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  configMapRef:
+    name: grafana-dashboard-node-cluster-rsrc-use
+    key: node-cluster-rsrc-use.json
+---
+kind: GrafanaDashboard
+apiVersion: grafana.integreatly.org/v1beta1
+metadata:
+  namespace: benchy
+  name: grafana-dashboard-node-rsrc-use
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  configMapRef:
+    name: grafana-dashboard-node-rsrc-use
+    key: node-rsrc-use.json
+---
+kind: GrafanaDashboard
+apiVersion: grafana.integreatly.org/v1beta1
+metadata:
+  namespace: benchy
+  name: grafana-dashboard-pod-total
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  configMapRef:
+    name: grafana-dashboard-pod-total
+    key: pod-total.json
+---
+kind: GrafanaDashboard
+apiVersion: grafana.integreatly.org/v1beta1
+metadata:
+  namespace: benchy
+  name: grafana-dashboard-prometheus
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  configMapRef:
+    name: grafana-dashboard-prometheus
+    key: prometheus.json
