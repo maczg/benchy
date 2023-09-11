@@ -1216,5 +1216,5 @@ data:
 kind: ConfigMap
 metadata:
   name: grafana-dashboard-prometheus
-  namespace: benchy
+  namespace: grafana-operator
 

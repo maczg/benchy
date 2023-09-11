@@ -1070,5 +1070,5 @@ data:
 kind: ConfigMap
 metadata:
   name: grafana-dashboard-node-rsrc-use
-  namespace: benchy
+  namespace: grafana-operator
 

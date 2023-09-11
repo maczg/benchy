@@ -1951,4 +1951,4 @@ data:
 kind: ConfigMap
 metadata:
   name: grafana-dashboard-k8s-resources-pod
-  namespace: benchy
+  namespace: grafana-operator

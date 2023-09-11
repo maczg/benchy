@@ -2778,5 +2778,5 @@ data:
 kind: ConfigMap
 metadata:
   name: grafana-dashboard-k8s-resources-namespace
-  namespace: benchy
+  namespace: grafana-operator
 

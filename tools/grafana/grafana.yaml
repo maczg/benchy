@@ -3,7 +3,7 @@ apiVersion: grafana.integreatly.org/v1beta1
 kind: Grafana
 metadata:
   name: grafana
-  namespace: benchy
+  namespace: grafana-operator
   labels:
     dashboards: "grafana"
 spec:
@@ -11,7 +11,7 @@ spec:
     log:
       mode: "console"
     auth:
-      disable_login_form: false
+      disable_login_form: "false"
     security:
       admin_user: admin
       admin_password: admin
@@ -22,7 +22,7 @@ kind: Datasource
 kind: GrafanaDashboard
 apiVersion: grafana.integreatly.org/v1beta1
 metadata:
-  namespace: benchy
+  namespace: grafana-operator
   name: grafana-dashboard-api-performance
 spec:
   instanceSelector:
@@ -35,7 +35,7 @@ spec:
 kind: GrafanaDashboard
 apiVersion: grafana.integreatly.org/v1beta1
 metadata:
-  namespace: benchy
+  namespace: grafana-operator
   name: grafana-dashboard-cluster-total
 spec:
   instanceSelector:
@@ -48,7 +48,7 @@ spec:
 kind: GrafanaDashboard
 apiVersion: grafana.integreatly.org/v1beta1
 metadata:
-  namespace: benchy
+  namespace: grafana-operator
   name: grafana-dashboard-k8s-resources-cluster
 spec:
   instanceSelector:
@@ -61,7 +61,7 @@ spec:
 kind: GrafanaDashboard
 apiVersion: grafana.integreatly.org/v1beta1
 metadata:
-  namespace: benchy
+  namespace: grafana-operator
   name: grafana-dashboard-k8s-resources-namespace
 spec:
   instanceSelector:
@@ -74,7 +74,7 @@ spec:
 kind: GrafanaDashboard
 apiVersion: grafana.integreatly.org/v1beta1
 metadata:
-  namespace: benchy
+  namespace: grafana-operator
   name:  grafana-dashboard-k8s-resources-node
 spec:
   instanceSelector:
@@ -87,7 +87,7 @@ spec:
 kind: GrafanaDashboard
 apiVersion: grafana.integreatly.org/v1beta1
 metadata:
-  namespace: benchy
+  namespace: grafana-operator
   name: grafana-dashboard-k8s-resources-pod
 spec:
   instanceSelector:
@@ -100,7 +100,7 @@ spec:
 kind: GrafanaDashboard
 apiVersion: grafana.integreatly.org/v1beta1
 metadata:
-  namespace: benchy
+  namespace: grafana-operator
   name: grafana-dashboard-k8s-resources-workload
 spec:
   instanceSelector:
@@ -113,7 +113,7 @@ spec:
 kind: GrafanaDashboard
 apiVersion: grafana.integreatly.org/v1beta1
 metadata:
-  namespace: benchy
+  namespace: grafana-operator
   name: grafana-dashboard-node-cluster-rsrc-use
 spec:
   instanceSelector:
@@ -126,7 +126,7 @@ spec:
 kind: GrafanaDashboard
 apiVersion: grafana.integreatly.org/v1beta1
 metadata:
-  namespace: benchy
+  namespace: grafana-operator
   name: grafana-dashboard-node-rsrc-use
 spec:
   instanceSelector:
@@ -139,7 +139,7 @@ spec:
 kind: GrafanaDashboard
 apiVersion: grafana.integreatly.org/v1beta1
 metadata:
-  namespace: benchy
+  namespace: grafana-operator
   name: grafana-dashboard-pod-total
 spec:
   instanceSelector:
@@ -152,7 +152,7 @@ spec:
 kind: GrafanaDashboard
 apiVersion: grafana.integreatly.org/v1beta1
 metadata:
-  namespace: benchy
+  namespace: grafana-operator
   name: grafana-dashboard-prometheus
 spec:
   instanceSelector:

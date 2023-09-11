@@ -1445,4 +1445,4 @@ data:
 kind: ConfigMap
 metadata:
   name: grafana-dashboard-namespace-by-pod
-  namespace: benchy
+  namespace: grafana-operator

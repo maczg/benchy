@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: grafana-dashboard-api-performance
-  namespace: benchy
+  namespace: grafana-operator
 data:
   api-performance.json: |-
     {
