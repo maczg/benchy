@@ -1,5 +1,21 @@
 services:
 
+
+  locust-exporter:
+    image: containersol/locust_exporter:latest
+    ports:
+      - "9646:9646"
+    environment:
+      - LOCUST_EXPORTER_URI=http://loadgen:8089
+
+  grafana:
+    image: grafana/grafana-enterprise
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - '3000:3000'
+    volumes:
+      - grafana_data:/var/lib/grafana
   benchy:
     build:
       context: ../..
@@ -20,7 +36,43 @@ services:
         - PORT=8080
         - TARGET_ADDR="http://benchy:8080"
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus_benchy
+    restart: always
+    ports:
+      - "9091:9090"
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --web.enable-lifecycle
+      - --storage.tsdb.retention.time=15d
+    volumes:
+      - ./prometheus/conf/prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:v0.46.0
+    container_name: cadvisor_benchy
+    restart: always
+    ports:
+      - 8080
+    command:
+      - '--docker_only=true'
+      - '--housekeeping_interval=15s'
+    privileged: true
+    # cpus: 1
+    devices:
+      - /dev/kmsg:/dev/kmsg
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+      #- /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
+    labels:
+      org.label-schema.group: "monitoring"
+
+volumes:
+  grafana_data: {}
 #  kafka:
 #    extends:
 #      service: kafka
