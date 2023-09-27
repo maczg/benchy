@@ -50,7 +50,7 @@ services:
       - ./prometheus/conf/prometheus.yml:/etc/prometheus/prometheus.yml:ro
 
   cadvisor:
-    image: google/cadvisor:latest
+    image: gcr.io/cadvisor/cadvisor:v0.46.0
     container_name: cadvisor_benchy
     restart: always
     ports:
