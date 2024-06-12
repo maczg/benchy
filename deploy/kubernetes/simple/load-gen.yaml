@@ -53,7 +53,7 @@ spec:
                 - ALL
             privileged: false
             readOnlyRootFilesystem: true
-          image: quay.io/massigollo/benchy:load
+          image: quay.io/massigollo/benchy:locust-0.0.1
           imagePullPolicy: Always
           env:
             - name: USERS
@@ -80,11 +80,14 @@ metadata:
   name: locust-config
 data:
   locustfile.py: |
-    from locust import HttpUser, task, between
+    from locust import HttpUser, task, between, constant_pacing,constant_throughput
 
     class User(HttpUser):
-      wait_time = between(1, 2.5)
+      # wait_time = between(1, 2.5)
+      # wait_time = constant_pacing(1)
+      wait_time = constant_throughput(1)
       
       @task
       def cpu_load(self):
         self.client.get("/cpuintensive?n=30")
+        # self.client.get("/cpu?n=1")
