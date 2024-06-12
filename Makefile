@@ -1,4 +1,6 @@
 VERSION ?= 0.0.1
+#VERSION ?= $(git rev-parse --short HEAD)
+
 IMAGE_TAG_BASE ?= quay.io/massigollo/benchy
 PLATFORMS ?= linux/amd64
 IMG ?= $(IMAGE_TAG_BASE):$(VERSION)
@@ -24,11 +26,11 @@ push: build
 
 .PHONY: build-load
 build-load:
-	@docker build -t $(IMAGE_TAG_BASE):load utils/load-gen
+	@docker build -t $(IMAGE_TAG_BASE):locust-${VERSION} tools/load-gen
 
 .PHONY: push-load
 push-load: build-load
-	@docker push $(IMAGE_TAG_BASE):load
+	@docker push $(IMAGE_TAG_BASE):locust-${VERSION}
 
 deploy:
 	@kubectl cluster-info | head -n -2

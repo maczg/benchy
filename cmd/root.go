@@ -43,6 +43,7 @@ func init() {
 	rootCmd.AddCommand(&simpleCmd)
 	rootCmd.AddCommand(&traceCmd)
 	rootCmd.AddCommand(&kafkaConsumerCmd)
+	rootCmd.AddCommand(&loadCmd)
 	rootCmd.AddCommand(version.Command())
 
 	initVariables()

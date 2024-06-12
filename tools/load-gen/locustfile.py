@@ -1,7 +1,9 @@
-from locust import HttpUser, task, between
+from locust import HttpUser, task, between, constant_pacing
+from locust_plugins import constant_total_ips
+
 
 class User(HttpUser):
-    wait_time = between(1, 2.5)
+    # wait_time = between(1, 2.5)
 
     @task
     def cpu_load(self):
