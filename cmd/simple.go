@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/massimo-gollo/benchy/pkg/middleware"
@@ -9,6 +10,9 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -38,8 +42,32 @@ var simpleCmd = cobra.Command{
 			WriteTimeout:   time.Duration(writeTimeout) * time.Second,
 			MaxHeaderBytes: 1 << 20,
 		}
+		// Channel to listen for interrupt or terminate signals
+		stop := make(chan os.Signal, 1)
+		signal.Notify(stop, os.Interrupt, syscall.SIGTERM)
 
-		logrus.Fatalln(s.ListenAndServe())
+		// Run server in a goroutine so that it doesn't block
+		go func() {
+			if err := s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+				logrus.Fatalf("Could not listen on %s: %v\n", ":8080", err)
+			}
+		}()
+		logrus.Println("Server is ready to handle requests at :8080")
+
+		// Block until we receive a signal
+		<-stop
+		logrus.Println("Shutting down server...")
+
+		// Create a deadline to wait for server to shut down gracefully
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		// Shutdown the server gracefully
+		if err := s.Shutdown(ctx); err != nil {
+			logrus.Fatalf("Server forced to shutdown: %v", err)
+		}
+
+		logrus.Println("Server exiting")
 	},
 }
 
